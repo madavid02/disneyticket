@@ -1,0 +1,57 @@
+import requests
+import time
+import telebot
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+sleep = 10
+url = 'https://reserve.tokyodisneyresort.jp/ticket/ajax/checkSaleable/'
+
+url2 = 'https://reserve.tokyodisneyresort.jp/ticket/search/?useDateFrom=20220407&selectParkDay1=02&parkTicketSalesForm=1&numOfAdult=1&numOfJunior=0&numOfChild=0&parkTicketGroupCd=020&useDays=1&route=2&'
+# cookie: {'__zlcmid':'18qkkiugKsPCMpC'; SWID=0f2c4722-1147-4504-bc5b-ff00adeacf46; wovn_selected_lang=zh-CHS; wovn_uuid=g15lrcobw; WAPID=eNfkhYqn2lJQ0gjK8dMIePYtrsI1pVI3j6L; wap_last_event=showWidgetPage; bm_sz=12B8230430FFB482700ECCC149D15308~YAAQIHwvF9nVbWl/AQAAIDf6gg/BqsiGix7kZNar0hWpxurguak+3FUKoVqZXEY+8sTTiopHkYEom8hVh3KpSI5liUzQjxkmV+Du0ai/kcyhKo5Pcg8nmpdbAju2f1cZ1x1YeQItbxP1sdR4kFgt8NqygE7tNbeUXQtOJMGoC0BNB9nUz+laNx70dyqgOWIE1lUNXnYFPwXKzUK6CUcLk5eKP3sdquMPO3dhqB2TT1FCY1Hp29ZPwZcMLi0mdj+/w4jUlyDlnk1KzRR4F+zjKBev5m79pyQWHVkfyr255Uo/OdHCgxqOgqzBYbjN~4339768~4277058; akavpau_vp_reserve=1647171122~id=10235cd61e1508f02cdb02e6ed0761d8; _abck=1EF164671A42E5ACAA51522CD9228B7D~0~YAAQShxiMTSrc2l/AQAAlrwDgwdGl8hUN9mSoKMXPn6yrQ9nA6RrV+WMClg+1Oc2aQRKHylSn2cxWytzccrKtu0fGZxAbTS4NAuX2JQcbnqLZ8wUklLchHcxqGS7w2vR/WEQD5p08VGZy1XedOrEOnS/XmN/W3za3YwxzhhwRVhT4veP1rY/2dYDk5ckM+/aOZ8YMynCqB4KtVxb9DPbgz/oSj2gSvZ3gOWS99rI6QxjQ2xRBWM9T/PbplnpEu8/aljgoeVq1wZmMeEVs4GqHOvEIOY0kaEg58d/i6dXb/NJ49x9erCoymV8WwjcKeB0rrISyFtv1XlcrHbk+XLUAB8u4/A07XXpivJhI8XFboEPDanB+H/v4+SpHWM8JJ5BcDGZGoC7TUjRryEunxDAk/QschTGuiKQxmEJf46lCP2XvA==~-1~-1~-1; AWSALB=OGOaBxI9ViST9bjLiWWAM24xAOzdUPK7U6a59ko2bDiE25hSrWmb9cXHcEOz1QSfEGWm2vIth+VN6R+a5Wq6tQbk6hXRkx6v8ZcZ0vsB4ry8+EvtpxLSzYrlrMiT; AWSALBCORS=OGOaBxI9ViST9bjLiWWAM24xAOzdUPK7U6a59ko2bDiE25hSrWmb9cXHcEOz1QSfEGWm2vIth+VN6R+a5Wq6tQbk6hXRkx6v8ZcZ0vsB4ry8+EvtpxLSzYrlrMiT}
+def tg_bot():
+    tb = telebot.TeleBot('5145286863:AAGt2J9Ak1edqYhaNHUahjESGplfiwDj17U')
+    text = time.strftime('%H:%M:%S') + "！！！票子补货了！！！！！！！！！！！/n "+url2
+    tb.send_message(  # 1052366893
+        -711535743, text)
+
+while True:
+    try:
+        monitor = requests.post('https://reserve.tokyodisneyresort.jp/ticket/ajax/checkSaleable/', headers={
+            'Host': 'reserve.tokyodisneyresort.jp',
+            'Connection': 'keep-alive',
+            'Content-Length': '52',
+            'sec-ch-ua': '"Chromium";v="94", "Google Chrome";v="94", ";Not A Brand";v="99"',
+            'DNT': '1',
+            'sec-ch-ua-mobile': '?0',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.54 Safari/537.36',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'X-Requested-With': 'XMLHttpRequest',
+            'sec-ch-ua-platform': "Windows",
+            'Origin': 'https://reserve.tokyodisneyresort.jp',
+            'Sec-Fetch-Site': 'same-origin',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Dest': 'empty',
+            'Referer': 'https://reserve.tokyodisneyresort.jp/ticket/search/',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,zh-JP;q=0.7,ja-JP;q=0.6,ja;q=0.5,zh-HK;q=0.4,am;q=0.3'
+            }, data='_xhr=&useDateFrom=20220407&commodityCd=TOZZ1D21031PT', verify=False)
+        # print(monitor.text)
+    except Exception as error:
+        print('网站状态异常，休眠{}秒'.format(sleep))
+        print(error)
+        print("*" * 30)
+        time.sleep(sleep)
+    else:
+        if monitor.text.find('saleStatusEticket":"1') < 0:
+            print('现在时间：{t}\n商品地址：{u}\n状态：无货\n将在{s}秒后进行下一次检查'.format(t=time.strftime('%H:%M:%S'), s=sleep, u=url2))
+            print("*" * 30)
+            time.sleep(sleep)
+        else:
+            # print(monitor.text)
+            print('上货了!!!买买买!!!')
+            print('现在时间：{t}\n商品地址：{u}\n状态：有货'.format(t=time.strftime('%H:%M:%S'), u=url2))
+            print("*" * 30)
+            tg_bot()
+            time.sleep(10)
